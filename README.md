@@ -1,4 +1,3 @@
-# BeutterflyRocketSimulator
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -61,25 +60,27 @@ details{border:1px solid var(--bd);border-radius:6px;margin:10px 0;padding:6px 1
 <h2>Composants et position (depuis la base)</h2><div id="list"></div><h2>Composant sélectionné</h2>
 <div id="info">Cliquez sur une partie de la fusée.</div>
 <details open><summary>Générateur de design</summary><textarea id='gt' rows='3' style='width:100%;margin:6px 0' placeholder='Ex : fusée noire et argent de 1,5 m, corps transparent, 4 ailerons'></textarea><div><button id='gg'>Générer</button> <button id='gu'>Annuler</button></div><div id='gx' class='note'></div><h2>Style visuel</h2><select id='sty' style='width:100%'><option value=''>Choisir un style…</option></select><h2>Longueur : préréglages <span id='lc' style='color:var(--cy)'></span></h2><div id='lp' style='display:flex;flex-wrap:wrap;gap:4px'></div><div class='row' style='margin-top:6px'>Longueur exacte (cm) <input type='number' id='ln' min='10' max='500' step='0.5' style='width:80px'></div></details>
+<details open><summary>Physique du modèle (calculée)</summary><div id='ph'></div></details>
+<details open><summary>Incertitudes (zone grisée)</summary><div class='row'><label><span><input type='checkbox' id='ub' checked> Afficher les zones</span></label></div><div class='row'><label>Traînée (Cd) <span id='ucv'></span></label><input type='range' id='uc' min='0' max='60' value='25'></div><div class='row'><label>Masse des pièces <span id='umv'></span></label><input type='range' id='um' min='0' max='40' value='10'></div><div class='row'><label>Vitesse initiale <span id='uvv'></span></label><input type='range' id='uv' min='0' max='30' value='5'></div><div class='row'><label>Densité de l’air <span id='urv'></span></label><input type='range' id='ur' min='0' max='30' value='5'></div><div class='row'><label>Portance des ailerons et de l’ogive <span id='unv'></span></label><input type='range' id='un' min='0' max='50' value='15'></div><div class='note'>Hypothèses que vous fixez, pas des mesures : ± x % ≈ intervalle à 95 % (loi normale). 300 tirages aléatoires reproductibles. Zone grise = 5–95 % des tirages ; billes et bandes 3D = plage du centre de gravité (cyan) et du centre de pression (ambre).</div></details>
 <details><summary>Matériaux et surface</summary><div class='note' id='mn'></div><select id='ms' style='width:100%;margin-bottom:6px'></select><div class='row'><label>Couleur <input type='color' id='mc'></label></div><div class='row'><label>Rugosité <span id='mrv'></span></label><input type='range' id='mr' min='0' max='1' step='.01'></div><div class='row'><label>Effet métallique <span id='mmv'></span></label><input type='range' id='mm' min='0' max='1' step='.01'></div><div class='row'><label>Opacité <span id='mov'></span></label><input type='range' id='mo' min='.1' max='1' step='.01'></div><div class='note' id='mi'></div></details>
 <details><summary>Affichage et coupe</summary><select id='dm' style='width:100%'><option value='full'>Assemblage complet</option><option value='int'>Vue interne (corps transparent)</option><option value='struct'>Structure seule</option><option value='elec'>Électronique seule</option><option value='prop'>Représentation propulsion seule</option></select><div class='row' style='margin-top:8px'><label><span><input type='checkbox' id='ce'> Plan de coupe</span><select id='ca'><option value='x'>Axe X</option><option value='y' selected>Axe Y</option><option value='z'>Axe Z</option></select></label></div><input type='range' id='cp' min='0' max='100' value='60'></details>
 <details><summary>Attitude (tangage, roulis, lacet)</summary><div class='row'><label>Tangage (axe X) <span id='apv'>0°</span></label><input type='range' id='ap' min='-180' max='180' value='0'></div><div class='row'><label>Roulis (axe long Y) <span id='arv'>0°</span></label><input type='range' id='ar' min='-180' max='180' value='0'></div><div class='row'><label>Lacet (axe Z) <span id='ayv'>0°</span></label><input type='range' id='ay' min='-180' max='180' value='0'></div><div class='note' id='av'></div><button id='arst'>Réinitialiser</button></details>
 <details><summary>Allumage virtuel (démonstration)</summary><div class='msg e' style='font-weight:600'>SIMULATION UNIQUEMENT — AUCUN ACTIONNEMENT PHYSIQUE</div><div id='ig' style='margin:6px 0'></div><div id='is' class='note'></div><button id='in'>État suivant</button> <button id='ir'>Réinitialiser</button><div style='margin-top:6px'><select id='if'></select> <button id='ifb'>Simuler le défaut</button></div><div id='il' style='max-height:120px;overflow:auto;font-size:11px;color:var(--tx2);margin-top:6px'></div></details>
 <details><summary>Configurations</summary><input type='text' id='cn' placeholder='Nom' style='width:55%'> <button id='cs'>Enregistrer</button><div id='cl'></div><button id='cx' style='margin-top:6px'>Exporter en JSON</button></details>
-<p class="note">Modèle éducatif : montée balistique à vitesse initiale donnée, atmosphère standard (ISA), traînée simplifiée (Cd = 0,3, valeur illustrative). Aucune propulsion n’est modélisée. Les résultats sont simulés, pas validés expérimentalement. La répartition des masses est une hypothèse illustrative.</p>
+<p class="note">Modèle éducatif : montée balistique à vitesse initiale donnée, atmosphère standard (ISA), traînée simplifiée (Cd calculé à partir de la forme, voir « Physique du modèle »). Aucune propulsion n’est modélisée. Les résultats sont simulés, pas validés expérimentalement. Les masses viennent d’un calcul surface × épaisseur × densité indicative.</p>
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
 <script>
 const $=i=>document.getElementById(i);
-const P={L:3,D:.2,N:.6,fins:4,finH:.15,mass:30,v0:150,mat:'alu'};
-const ROWS=[['L','Longueur totale (10 cm à 5 m)',.1,5,.01,'len'],['D','Diamètre maximal',.01,.5,.005,'len'],['N','Longueur de l’ogive',.02,2,.01,'len'],['fins','Nombre d’ailerons',3,8,1,''],['finH','Envergure des ailerons',.005,.5,.005,'len'],['mass','Masse à vide (kg)',.01,500,.01,''],['v0','Vitesse initiale (m/s)',20,600,5,'']];
+const P={L:3,D:.2,N:.6,fins:4,finH:.15,plm:.5,wall:.002,v0:150,mat:'alu'};
+const ROWS=[['L','Longueur totale (10 cm à 5 m)',.1,5,.01,'len'],['D','Diamètre maximal',.01,.5,.005,'len'],['N','Longueur de l’ogive',.02,2,.01,'len'],['fins','Nombre d’ailerons',3,8,1,''],['finH','Envergure des ailerons',.005,.5,.005,'len'],['plm','Masse de charge utile (kg)',0,50,.01,''],['wall','Épaisseur de paroi',.0005,.02,.0005,'mm'],['v0','Vitesse initiale (m/s)',20,600,5,'']];
 const U={get:()=>+$('unit').value,name:()=>$('unit').selectedOptions[0].text};
 const inputs={};
-function fmt(k,t){const r=ROWS.find(x=>x[0]===k);return r[5]==='len'?(P[k]*U.get()).toFixed(U.get()===1?3:U.get()===100?1:0)+' '+U.name():(+P[k]).toString()}
+function fmt(k,t){const r=ROWS.find(x=>x[0]===k);return r[5]==='len'?(P[k]*U.get()).toFixed(U.get()===1?3:U.get()===100?1:0)+' '+U.name():r[5]==='mm'?(P[k]*1000).toFixed(2)+' mm':(+P[k]).toString()}
 ROWS.forEach(([k,n,mn,mx,st])=>{const d=document.createElement('div');d.className='row';d.innerHTML=`<label>${n}<span id="v_${k}"></span></label><input type="range" min="${mn}" max="${mx}" step="${st}" value="${P[k]}">`;$('params').appendChild(d);const i=d.querySelector('input');inputs[k]=i;i.addEventListener('input',()=>{P[k]=+i.value;if(k==='L')fit();change()})});
-$('unit').onchange=()=>{labels();listC();showInfo()};$('mat').onchange=()=>{P.mat=$('mat').value;build()};
+$('unit').onchange=()=>{labels();listC();showInfo()};$('mat').onchange=()=>{P.mat=$('mat').value;build();sim();setChart(S.t.length-1)};
 function labels(){ROWS.forEach(r=>$('v_'+r[0]).textContent=fmt(r[0]));$('ln').value=(P.L*100).toFixed(1);$('lc').textContent=P.L<.3?'miniature':P.L<1?'petit modèle':P.L<2.5?'modèle moyen':'grand modèle'}
 
 /* ---- 3D ---- */
@@ -102,7 +103,7 @@ function listC(){const f=U.get(),n=U.name();$('list').innerHTML='';[...C].sort((
 const MAT={alu:[.85,.3],comp:[.2,.55],steel:[.95,.2]};
 const SECT=[['engine','Section moteur (générique)','Propulsion (représentation visuelle)',.15,.06,0x9aa3b0],['tank','Section réservoir (générique)','Structure',.4,.06,0xc7ced8],['instr','Baie d’instrumentation','Avionique',.15,.04,0x4fd6f0],['pay','Compartiment charge utile','Charge utile',.30,.05,0x9b8cff]];
 function mk(geo,col){const [m,r]=MAT[P.mat];return new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:col,metalness:m,roughness:r,wireframe:wire}))}
-function reg(id,name,cat,obj,len,dia,mf,y0,y1,idx,sh){obj.traverse(o=>o.userData.cid=id);rg.add(obj);C.push({id,name,cat,obj,len,dia,mass:P.mass*mf,y0,y1,base:obj.position.clone(),idx,sh})}
+function reg(id,name,cat,obj,len,dia,mf,y0,y1,idx,sh){obj.traverse(o=>o.userData.cid=id);rg.add(obj);C.push({id,name,cat,obj,len,dia,mass:0,y0,y1,base:obj.position.clone(),idx,sh})}
 function build(){
   C.forEach(c=>c.obj.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material)o.material.dispose()}));
   while(rg.children.length)rg.remove(rg.children[0]);C=[];
@@ -129,14 +130,14 @@ function build(){
   {const [a,b]=SP.pay,h=b-a;I('pld','Charge utile (bloc générique)','Charge utile',new THREE.CylinderGeometry(r*.6,r*.6,h*.6,32),0xd05cff,0,(a+b)/2,0,h*.6,r*1.2,.12,4,a+h*.2,b-h*.2,{t:'cyl',h:h*.6,d:r*1.2})}
   sc.remove(grid);grid.geometry.dispose();grid=new THREE.GridHelper(Math.max(P.L*4,.6),20,0x252D38,0x151A23);sc.add(grid);grid.position.y=-nzH-.0001;
   C.forEach(c=>{const l=document.createElement('div');l.className='lbl';l.id='l_'+c.id;l.style.display='none';l.textContent=c.id;vp.appendChild(l)});
-  applyMat();vis();cut();ghost();hl();apply(ex);showInfo();listC();
+  phys();applyMat();vis();cut();ghost();hl();apply(ex);showInfo();listC();
 }
 function apply(e){const g=P.L*.1;C.forEach(c=>{const o=c.obj;if(c.id==='fins'){o.position.y=c.base.y-e*g*.8;o.children.forEach(p=>p.children[0].position.x=P.D/2+e*P.D*.7)}else if(c.id==='nozzle')o.position.y=c.base.y-e*g;else o.position.y=c.base.y+e*g*(c.idx-1)*.9})}
 function hl(){C.forEach(c=>c.obj.traverse(o=>{if(o.material&&o.material.emissive){o.material.emissive.setHex(sel===c.id?0x00D9FF:0);o.material.emissiveIntensity=sel===c.id?.45:0}}));led()}
 function showInfo(){const c=C.find(x=>x.id===sel);if(!c){$('info').textContent='Cliquez sur une partie de la fusée.';closeDetail();return}
   const f=U.get(),n=U.name(),mt=$('mat').selectedOptions[0].text;
-  $('info').innerHTML=$('dfiche').innerHTML=`<dl style="margin:0"><dt>Nom</dt><dd><b>${c.name}</b> (${c.id})</dd><dt>Catégorie visuelle</dt><dd>${c.cat}</dd><dt>Dimensions</dt><dd>longueur ${(c.len*f).toFixed(2)} ${n} · diamètre ${(c.dia*f).toFixed(2)} ${n}</dd><dt>Matériau</dt><dd>${mt}</dd><dt>Masse estimée (hypothèse illustrative)</dt><dd>${c.mass.toFixed(1)} kg</dd><dt>Position dans l’assemblage</dt><dd>de ${(c.y0*f).toFixed(2)} à ${(c.y1*f).toFixed(2)} ${n} depuis la base</dd></dl>`;openDetail(c);syncMat(c)}
-function validate(){let h='';const {L,D,N,finH}=P;
+  $('info').innerHTML=$('dfiche').innerHTML=`<dl style="margin:0"><dt>Nom</dt><dd><b>${c.name}</b> (${c.id})</dd><dt>Catégorie visuelle</dt><dd>${c.cat}</dd><dt>Dimensions</dt><dd>longueur ${(c.len*f).toFixed(2)} ${n} · diamètre ${(c.dia*f).toFixed(2)} ${n}</dd><dt>Matériau</dt><dd>${mt}</dd><dt>Masse calculée (surface × épaisseur × densité indicative)</dt><dd>${c.mass.toFixed(3)} kg</dd><dt>Position dans l’assemblage</dt><dd>de ${(c.y0*f).toFixed(2)} à ${(c.y1*f).toFixed(2)} ${n} depuis la base</dd></dl>`;openDetail(c);syncMat(c)}
+function validate(){let h='';const {L,D,N,finH}=P;if(P.wall>D/4){P.wall=D/4;inputs.wall.value=P.wall;h+=`<div class='msg w'>Épaisseur de paroi limitée à D/4 : la paroi ne peut pas remplir la section.</div>`}
   if(N>L*.5){P.N=L*.5;inputs.N.value=P.N;h+='<div class="msg w">Ogive limitée à 50 % de la longueur totale.</div>'}
   if(L/D<5)h+='<div class="msg w">Élancement L/D inférieur à 5 : forme inhabituelle pour une fusée.</div>';
   if(finH>D*2)h+='<div class="msg w">Ailerons très grands par rapport au diamètre.</div>';
@@ -224,7 +225,7 @@ function syncMat(c){['ms','mc','mr','mm','mo'].forEach(i=>$(i).disabled=!c);
  const a=o&&MATS[o.k];$('mi').textContent=a?`${a.cat} · densité ≈ ${a.rho?a.rho+' kg/m³':'non applicable (revêtement)'} · valeurs génériques indicatives, pas des données certifiées de fabricant.`:'Matériau par défaut du projet.'}
 function setF(f,v){if(!sel)return;const o=MO[sel]||(MO[sel]={k:'',c:$('mc').value,m:+$('mm').value,r:+$('mr').value,o:+$('mo').value});o[f]=v;applyMat();ghost();syncMat(C.find(x=>x.id===sel))}
 $('mc').addEventListener('input',e=>setF('c',e.target.value));$('mr').addEventListener('input',e=>setF('r',+e.target.value));$('mm').addEventListener('input',e=>setF('m',+e.target.value));$('mo').addEventListener('input',e=>setF('o',+e.target.value));
-$('ms').onchange=()=>{if(!sel)return;const k=$('ms').value;if(!k){delete MO[sel];build();return}const a=MATS[k];MO[sel]={k,c:a.c,m:a.m,r:a.r,o:a.o||1};applyMat();ghost();syncMat(C.find(x=>x.id===sel))};
+$('ms').onchange=()=>{if(!sel)return;const k=$('ms').value;if(!k){delete MO[sel];build();return}const a=MATS[k];MO[sel]={k,c:a.c,m:a.m,r:a.r,o:a.o||1};applyMat();ghost();physChange();syncMat(C.find(x=>x.id===sel))};
 function syncUI(){ROWS.forEach(r=>inputs[r[0]].value=P[r[0]]);$('mat').value=P.mat;$('xr').classList.toggle('on',xr);$('ex').classList.toggle('on',!!exT)}
 function snap(){hist.push(JSON.stringify({P,MO,xr,exT}))}
 function restore(s){Object.assign(P,s.P);Object.keys(MO).forEach(k=>delete MO[k]);Object.assign(MO,s.MO);xr=s.xr;exT=s.exT;syncUI();fit();change()}
@@ -282,23 +283,77 @@ function cfgList(){const a=cfgs();$('cl').innerHTML='';a.forEach((c,i)=>{const d
 $('cs').onclick=()=>{const a=cfgs();a.push({n:$('cn').value||'Configuration '+(a.length+1),s:JSON.parse(JSON.stringify({P,MO,xr,exT}))});putCfgs(a);cfgList()};
 $('cx').onclick=()=>{const b=new Blob([JSON.stringify({format:'beutterfly-config',version:1,created:new Date().toISOString(),P,MO,note:'Modèle éducatif, valeurs indicatives'},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='beutterfly_config.json';a.click()};
 cfgList();
+/* ---- physique du modèle : masse, centre de gravité, traînée, stabilité ---- */
+const BASE={alu:2700,comp:1600,steel:8000},PH={};
+function rhoOf(id){const o=MO[id],a=o&&MATS[o.k];return (a&&a.rho)||BASE[P.mat]}
+function cdM(M){return M<.8?1:M<1.2?1+(M-.8)/.4:Math.max(2-(M-1.2)*.5,1.4)}
+function phys(){
+ const {L,D,N,fins,finH}=P,r=D/2,t=Math.min(P.wall,D/4),B=L-N;
+ let An=0,yn=0,px=0,pr=r;for(let i=1;i<=48;i++){const u=i/48,x=u*N,q=r*Math.pow(Math.max(1-u*u,0),.6),ds=Math.hypot(x-px,q-pr),a=Math.PI*(q+pr)*ds;An+=a;yn+=a*(px+x)/2;px=x;pr=q}yn/=(An||1);
+ let finA=0,root=0,Fy=0;
+ C.forEach(c=>{const s=c.sh||{},rho=rhoOf(c.id);let m=0,yc=c.base.y;
+  if(['engine','tank','instr','pay','motor','rsv'].includes(c.id))m=Math.PI*s.d*s.h*t*rho;
+  else if(c.id==='nose'){m=An*t*rho;yc=c.base.y+yn}
+  else if(c.id==='nozzle')m=Math.PI*(s.d1+s.d2)/2*Math.hypot(s.h,(s.d2-s.d1)/2)*t*rho;
+  else if(c.id==='fins'){root=s.root;const q=[[0,s.root],[0,0],[s.span,-s.root*.45],[s.span,s.root*.15]];let a2=0,cy=0;for(let i=0;i<4;i++){const [x1,y1]=q[i],[x2,y2]=q[(i+1)%4],k=x1*y2-x2*y1;a2+=k;cy+=(y1+y2)*k}finA=Math.abs(a2)/2;Fy=cy/(3*a2);m=finA*s.th*s.n*rho;yc=c.base.y+Fy}
+  else if(c.id==='pcb')m=s.w*s.h*s.d*1850;else if(c.id==='mcu')m=s.w*s.h*s.d*2000;else if(c.id==='batt')m=s.w*s.h*s.d*2500;else if(c.id==='pld')m=P.plm;
+  c.mass=m;c.yc=yc});
+ let M=0,Mc=0;C.forEach(c=>{M+=c.mass;Mc+=c.mass*c.yc});const ycg=Mc/M,xcg=L-ycg;
+ const fc=C.find(x=>x.id==='fins'),A=Math.PI*r*r,Awet=Math.PI*D*B+An+2*fins*finA,fN=Math.max(N/D,.5);
+ const cf=.005*Awet/A,cb=.12,cn=Math.min(.5/(fN*fN),.8),cfin=Math.min(.4*fins*fc.sh.th*finH/A,.3);
+ const Cr=root,Ct=.6*root,Lm=.65*root,Xr=.85*root,Lf=Math.hypot(finH,Lm);
+ const CNf=(1+r/(finH+r))*(4*fins*Math.pow(finH/D,2))/(1+Math.sqrt(1+Math.pow(2*Lf/(Cr+Ct),2)));
+ const Xf=(Xr/3)*(Cr+2*Ct)/(Cr+Ct)+((Cr+Ct)-Cr*Ct/(Cr+Ct))/6,xfin=L-(fc.base.y+root)+Xf;
+ const xcp=(2*.466*N+CNf*xfin)/(2+CNf);
+ Object.assign(PH,{M,ycg,xcg,xcp,xfin,mar:(xcp-xcg)/D,Cd0:cf+cb+cn+cfin,cf,cb,cn,cfin,A,beta:M/((cf+cb+cn+cfin)*A),fN,CNf});
+ [[ycg,0x00D9FF],[L-xcp,0xFFB547]].forEach(a=>{const s=new THREE.Mesh(new THREE.SphereGeometry(Math.max(D*.18,.004),16,12),new THREE.MeshBasicMaterial({color:a[1],depthTest:false}));s.position.y=a[0];s.renderOrder=9;rg.add(s)})}
+function physChange(){phys();sim();setChart(S.t.length-1);$('tl').value=1000;showInfo()}
+function showPhys(){if(!PH.M)return;const g=9.80665,ap=Math.max(...S.h),ia=S.h.indexOf(ap),Ma=P.v0/Math.sqrt(1.4*287.05*288.15),gm=Math.max(...S.a.map(Math.abs))/g,mar=PH.mar;
+ const st=mar<0?['Instable : le centre de pression est devant le centre de gravité. La trajectoire 1D n’est alors pas représentative.','#FF5364']:mar<1?['Marge faible (repère usuel : 1 à 2 calibres)','#FFB547']:mar<=3?['Stable (repère usuel : 1 à 2 calibres)','#39D98A']:['Très stable : sensible au vent','#FFB547'];
+ const f=(n,d)=>n.toFixed(d),u=U.get(),row=(a,b)=>`<div style='display:flex;justify-content:space-between;gap:8px;font-size:12px'><span style='color:var(--tx2)'>${a}</span><b>${b}</b></div>`;
+ $('ph').innerHTML=row('Masse totale',f(PH.M,3)+' kg')+row('Poids (M·g)',f(PH.M*g,2)+' N')+row('Centre de gravité (<span style="color:#00D9FF">●</span>, depuis le nez)',f(PH.xcg*u,1)+' '+U.name())+row('Centre de pression (<span style="color:#FFB547">●</span>, depuis le nez)',f(PH.xcp*u,1)+' '+U.name())+row('Marge statique',f(mar,2)+' calibres'+(MC.mar?' (5–95 % : '+f(MC.mar[0],2)+' à '+f(MC.mar[2],2)+')':''))+`<div class='msg' style='color:${st[1]};border-color:${st[1]}66'>${st[0]}</div>`+row('Aire de référence',f(PH.A*1e4,2)+' cm²')+row('Finesse L/D · ogive N/D',f(P.L/P.D,1)+' · '+f(PH.fN,1))+row('Cd estimé',f(PH.Cd0,3))+row('dont frottement · culot · ogive · ailerons',f(PH.cf,2)+' · '+f(PH.cb,2)+' · '+f(PH.cn,2)+' · '+f(PH.cfin,2))+row('Coefficient balistique m/(Cd·A)',f(PH.beta,0)+' kg/m²')+row('Apogée simulé (déterministe)',f(ap,1)+' m (t = '+f(S.t[ia],1)+' s)')+mcRows(row)+row('Mach initial',f(Ma,2))+row('Décélération max',f(gm,1)+' g')+(Ma>.8?`<div class='msg w'>Régime transsonique ou supersonique : la traînée est corrigée par un modèle éducatif très simplifié.</div>`:'')+`<div class='note'>Modèle éducatif non validé : masses = surface × épaisseur × densité indicative ; Cd = somme de termes approchés ; stabilité par la méthode de Barrowman simplifiée (subsonique, petits angles) ; montée verticale 1D à vitesse initiale donnée, aucune poussée modélisée.</div>`}
+/* ---- incertitudes : Monte-Carlo ---- */
+const MC={Hb:[],Vb:[],ap:[],tap:[],gm:[],mar:null,p0:0,p1:0,hmax:0,vmin:0,vmax:0,tmax:0,dt:.1};let MCZ=[];
+function rnd(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function mcRun(){
+ MCZ.forEach(z=>rg.remove(z));MCZ=[];
+ const nr=300,rn=rnd(12345),gs=()=>Math.sqrt(-2*Math.log(1-rn()))*Math.cos(2*Math.PI*rn()),dt=MC.dt,sg=k=>(+$(k).value/100)/2,sc=sg('uc'),sm=sg('um'),sv=sg('uv'),sr=sg('ur'),sn=sg('un');
+ const runs=[],ap=[],tp=[],gx=[],mars=[],xg=[],xp=[],ms0=C.map(c=>c.mass),ys=C.map(c=>c.yc),{L,N,D}=P;let Lm=0;
+ for(let i=0;i<nr;i++){
+  const fm=Math.max(.2,1+sm*gs()),fc=Math.max(.2,1+sc*gs()),fv=Math.max(.2,1+sv*gs()),fr=Math.max(.2,1+sr*gs()),m=PH.M*fm;
+  let h=0,v=P.v0*fv,t=0,apx=0,tap=0,gmx=0;const H=[],V=[];
+  while(t<900){const g=9.80665*Math.pow(6371000/(6371000+h),2),at=isa(h),Cd=PH.Cd0*fc*cdM(Math.abs(v)/Math.sqrt(1.4*287.05*at.T)),a=-g-Math.sign(v)*.5*at.rho*fr*Cd*PH.A*v*v/m;H.push(h);V.push(v);if(h>apx){apx=h;tap=t}gmx=Math.max(gmx,Math.abs(a)/9.80665);v+=a*dt;h+=v*dt;t+=dt;if(h<0&&t>dt)break}
+  H.push(0);V.push(0);runs.push({H,V});ap.push(apx);tp.push(tap);gx.push(gmx);Lm=Math.max(Lm,H.length);
+  let sw=0,sy=0;ms0.forEach((q,k)=>{const w=q*Math.max(.2,1+sm*gs());sw+=w;sy+=w*ys[k]});const xcg=L-sy/sw,cn=PH.CNf*Math.max(.2,1+sn*gs()),xcp=(2*.466*N+cn*PH.xfin)/(2+cn);
+  xg.push(xcg);xp.push(xcp);mars.push((xcp-xcg)/D)}
+ const q=(a,p)=>{const s=[...a].sort((x,y)=>x-y);return s[Math.round(p*(s.length-1))]},tri=a=>[q(a,.05),q(a,.5),q(a,.95)];
+ MC.ap=tri(ap);MC.tap=tri(tp);MC.gm=tri(gx);MC.mar=tri(mars);MC.p0=mars.filter(x=>x<0).length/nr;MC.p1=mars.filter(x=>x<1).length/nr;
+ MC.Hb=[];MC.Vb=[];for(let j=0;j<Lm;j++){const hs=runs.map(r=>r.H[j]??0).sort((x,y)=>x-y),vs=runs.map(r=>r.V[j]??0).sort((x,y)=>x-y),lo=Math.round(.05*(nr-1)),hi=Math.round(.95*(nr-1));MC.Hb.push([j*dt,hs[lo],hs[hi]]);MC.Vb.push([j*dt,vs[lo],vs[hi]])}
+ MC.hmax=Math.max(...MC.Hb.map(x=>x[2]));MC.vmin=Math.min(...MC.Vb.map(x=>x[1]));MC.vmax=Math.max(...MC.Vb.map(x=>x[2]));MC.tmax=(Lm-1)*dt;
+ if($('ub').checked){const zone=(a,col)=>{const y0=L-q(a,.95),y1=L-q(a,.05),hh=Math.max(y1-y0,.004),z=new THREE.Mesh(new THREE.CylinderGeometry(D*.56,D*.56,hh,32),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.28,depthTest:false}));z.position.y=(y0+y1)/2;z.renderOrder=8;rg.add(z);MCZ.push(z)};zone(xg,0x00D9FF);zone(xp,0xFFB547)}}
+function mcRows(row){if(!MC.ap.length)return'';const f=(n,d)=>n.toFixed(d);return row('Apogée (5 · 50 · 95 %)',f(MC.ap[0],0)+' · '+f(MC.ap[1],0)+' · '+f(MC.ap[2],0)+' m')+row('Temps d’apogée (5–95 %)',f(MC.tap[0],1)+' à '+f(MC.tap[2],1)+' s')+row('Décélération max (95 %)',f(MC.gm[2],1)+' g')+row('Probabilité marge < 0 · < 1 cal',f(MC.p0*100,0)+' % · '+f(MC.p1*100,0)+' %')}
+function bands(n){const on=$('ub').checked&&MC.Hb.length>1,j=on?Math.min(MC.Hb.length-1,Math.floor(S.t[Math.min(n,S.t.length-1)]/MC.dt)):0;
+ const mk=(name,key,idx,col)=>({name,type:'custom',yAxisIndex:idx,z:1,silent:true,itemStyle:{color:col},dimensions:['x','y'],encode:{x:0,y:1},data:[[0,0]],renderItem:()=>{if(!on||j<1)return null;const pts=[];for(let i=0;i<=j;i++)pts.push(chart.convertToPixel({yAxisIndex:idx},MC[key][i][2])!==undefined?[chart.convertToPixel({xAxisIndex:0},MC[key][i][0]),chart.convertToPixel({yAxisIndex:idx},MC[key][i][2])]:[0,0]);for(let i=j;i>=0;i--)pts.push([chart.convertToPixel({xAxisIndex:0},MC[key][i][0]),chart.convertToPixel({yAxisIndex:idx},MC[key][i][1])]);return{type:'polygon',shape:{points:pts},style:{fill:col}}}});
+ return[mk('Zone d’incertitude altitude (5–95 %)','Hb',0,'rgba(0,217,255,.2)'),mk('Zone d’incertitude vitesse (5–95 %)','Vb',1,'rgba(128,107,255,.2)')]}
+function refreshMC(){mcRun();showPhys();setChart(Math.round($('tl').value/1000*(S.t.length-1)))}
+['uc','um','uv','ur','un'].forEach(k=>{const u=()=>$(k+'v').textContent='± '+$(k).value+' %';u();$(k).addEventListener('input',()=>{u();refreshMC()})});$('ub').addEventListener('change',refreshMC);
 /* ---- Simulation éducative : montée balistique, ISA ---- */
 let S={t:[],h:[],v:[],a:[],rho:[],T:[]};
 function isa(h){let T,p;if(h<11000){T=288.15-.0065*h;p=101325*Math.pow(T/288.15,5.2559)}else{T=216.65;p=22632*Math.exp(-(h-11000)/6341.6)}return{T,rho:p/(287.05*T)}}
-function sim(){const r=P.D/2,A=Math.PI*r*r,Cd=.3,m=P.mass,dt=.05;let t=0,h=0,v=P.v0;S={t:[],h:[],v:[],a:[],rho:[],T:[]};
-  while(t<900){const g=9.80665*Math.pow(6371000/(6371000+h),2),at=isa(h),a=-g-Math.sign(v)*.5*at.rho*Cd*A*v*v/m;
+function sim(){const r=P.D/2,A=Math.PI*r*r,m=PH.M,dt=.05;let t=0,h=0,v=P.v0;S={t:[],h:[],v:[],a:[],rho:[],T:[]};
+  while(t<900){const g=9.80665*Math.pow(6371000/(6371000+h),2),at=isa(h),Cd=PH.Cd0*cdM(Math.abs(v)/Math.sqrt(1.4*287.05*at.T)),a=-g-Math.sign(v)*.5*at.rho*Cd*A*v*v/m;
     S.t.push(t);S.h.push(h);S.v.push(v);S.a.push(a);S.rho.push(at.rho);S.T.push(at.T);
-    v+=a*dt;h+=v*dt;t+=dt;if(h<0&&t>dt){break}}}
+    v+=a*dt;h+=v*dt;t+=dt;if(h<0&&t>dt){break}}mcRun();showPhys()}
 const chart=echarts.init($('chart'));
 function setChart(n){const sl=k=>S.t.slice(0,n+1).map((t,i)=>[+t.toFixed(2),+S[k][i].toFixed(3)]);
-  const tmax=Math.ceil(S.t[S.t.length-1]),hm=Math.max(...S.h)*1.05,vmin=Math.min(...S.v,...S.a),vmax=Math.max(...S.v,...S.a);
+  const tmax=Math.ceil(Math.max(S.t[S.t.length-1],MC.tmax||0)),hm=Math.max(...S.h,MC.hmax||0)*1.05,vmin=Math.min(...S.v,...S.a,MC.vmin||0),vmax=Math.max(...S.v,...S.a,MC.vmax||0);
   chart.setOption({animation:false,backgroundColor:'transparent',textStyle:{color:'#929BA9'},grid:{left:62,right:62,top:34,bottom:42},legend:{top:4,textStyle:{color:'#F2F4F8'}},tooltip:{trigger:'axis'},
   dataZoom:[{type:'inside'}],
   xAxis:{type:'value',name:'t (s)',min:0,max:tmax,splitLine:{lineStyle:{color:'#252D38'}}},
   yAxis:[{type:'value',name:'altitude (m)',min:0,max:hm,splitLine:{lineStyle:{color:'#252D38'}}},{type:'value',name:'v (m/s), a (m/s²)',min:vmin*1.05,max:vmax*1.05,splitLine:{show:false}}],
-  series:[{name:'Altitude (m)',type:'line',showSymbol:false,data:sl('h'),itemStyle:{color:'#00D9FF'}},{name:'Vitesse (m/s)',type:'line',yAxisIndex:1,showSymbol:false,data:sl('v'),itemStyle:{color:'#806BFF'}},{name:'Accélération (m/s²)',type:'line',yAxisIndex:1,showSymbol:false,data:sl('a'),itemStyle:{color:'#FFB547'}}]});
+  series:[...bands(n),{name:'Altitude (m)',type:'line',showSymbol:false,data:sl('h'),itemStyle:{color:'#00D9FF'}},{name:'Vitesse (m/s)',type:'line',yAxisIndex:1,showSymbol:false,data:sl('v'),itemStyle:{color:'#806BFF'}},{name:'Accélération (m/s²)',type:'line',yAxisIndex:1,showSymbol:false,data:sl('a'),itemStyle:{color:'#FFB547'}}]});
   const i=Math.min(n,S.t.length-1);
-  $('ro').innerHTML=`t <b>${S.t[i].toFixed(1)} s</b> · alt <b>${S.h[i].toFixed(0)} m</b> · v <b>${S.v[i].toFixed(1)}</b> · a <b>${S.a[i].toFixed(2)}</b> · ρ <b>${S.rho[i].toFixed(3)} kg/m³</b> · T <b>${S.T[i].toFixed(1)} K</b> · m <b>${P.mass} kg</b>`}
+  $('ro').innerHTML=`t <b>${S.t[i].toFixed(1)} s</b> · alt <b>${S.h[i].toFixed(0)} m</b> · v <b>${S.v[i].toFixed(1)}</b> · a <b>${S.a[i].toFixed(2)}</b> · ρ <b>${S.rho[i].toFixed(3)} kg/m³</b> · T <b>${S.T[i].toFixed(1)} K</b> · m <b>${PH.M.toFixed(3)} kg</b>`}
 let playing=false,simT=0,hold=false,fc=0;
 $('run').onclick=()=>{simT=0;playing=true};$('pause').onclick=()=>{playing=!playing};
 $('rst').onclick=()=>{playing=false;simT=0;setChart(0);$('tl').value=0};
